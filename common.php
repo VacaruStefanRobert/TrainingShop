@@ -1,9 +1,5 @@
 <?php
 require_once 'config.php';
-if (!isset($_SESSION)) {
-    session_start();
-    $_SESSION['cart']=array();
-}
 function conn()
 {
     $conn = new mysqli(SERVERNAME, USERNAME, PASSWORD, DBNAME);
@@ -14,9 +10,8 @@ function conn()
     return $conn;
 }
 
-$conn = conn();
 
-function selectProducts($conn)
+function selectProducts($conn): array
 {
     $sql = "SELECT * FROM products";
     $results = $conn->query($sql);
@@ -36,10 +31,14 @@ function selectById($conn, $id)
     $stmt->execute();
     $results = $stmt->get_result();
 
-
-    $product = $results->fetch_assoc();
-    return $product;
+    return $results->fetch_assoc();
 }
-
+function removeProduct($conn,$id): void
+{
+    $sql="DELETE * FROM products WHERE id=?";
+    $stmt=$conn->prepare($sql);
+    $stmt->bind_param("i",$id);
+    $stmt->execute();
+}
 
 
