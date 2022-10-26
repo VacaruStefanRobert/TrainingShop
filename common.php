@@ -33,12 +33,30 @@ function selectById($conn, $id)
 
     return $results->fetch_assoc();
 }
-function removeProduct($conn,$id): void
+
+function removeProduct($conn, $id): void
 {
-    $sql="DELETE * FROM products WHERE id=?";
-    $stmt=$conn->prepare($sql);
-    $stmt->bind_param("i",$id);
+    $sql = "DELETE * FROM products WHERE id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
     $stmt->execute();
 }
+
+function updateProduct($conn, $product): void
+{
+    $sql="UPDATE products SET title=?, description=?, price=?,image=? WHERE id=?";
+    $stmt=$conn->prepare($sql);
+    $stmt->bind_param('ssdsi',$product['title'],$product['description'],$product['price'],$product['image'],$product['id']);
+    $stmt->execute();
+}
+
+function redirectAdmin(): void
+{
+    //if admin redirect to his page of products
+    if (isset($_SESSION['admin']) and $_SESSION['admin']) {
+        header('Location: products.php');
+    }
+}
+
 
 

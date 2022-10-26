@@ -2,10 +2,13 @@
 session_start();
 require_once 'common.php';
 $conn = conn();
+redirectAdmin();
+//added an item to the cart
 if ($_SERVER['REQUEST_METHOD'] == "POST") {
     $_SESSION['cart'][] = $_POST['id'];
     header("Location: cart.php");
 }
+//select the products
 if (!empty($conn)) {
     $products = selectProducts($conn);
 
@@ -24,31 +27,40 @@ if (!empty($conn)) {
 <html lang="EN">
 <head>
     <title>Shop</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css"
-          integrity="sha256-2XFplPlrFClt0bIdPgpz8H7ojnk10H69xRqd9+uTShA=" crossorigin="anonymous"/>
-    <link rel="stylesheet" href="style.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
+          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
+
 </head>
+
 <body>
-<h1>Product List</h1>
+<?php require_once 'nav.php'; ?>
 <?php
-if (!empty($products)):
-    foreach ($products as $product):
-        ?>
-        <div><?php echo "TITLE: " . $product['title'] . "<br>" ?></div>
-        <div><?php echo "DESCRIPTION: " . $product['description'] . "<br>" ?></div>
-        <div><?php echo "PRICE: " . $product['price'] . "<br>" ?></div>
-        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-            <input type="hidden" value="<?= $product['id'] ?>" name="id">
-            <button type="submit">Add</button>
-        </form>
-        <br>
-    <?php endforeach;
-else: ?>
+if (!empty($products)):?>
+    <div class="row row-cols-1 row-cols-md-3 g-4">
+        <?php foreach ($products as $product):
+            ?>
+            <div class="col">
+                <div class="card h-100">
+                    <img src="images/<?= $product['image'] ?>" class="card-img-top img-fluid" alt="">
+                    <div class="card-body">
+                        <h5 class="card-title"><?= $product['title'] ?></h5>
+                        <p class="card-text"><?= $product['description'] ?></p>
+                        <p class="card-text">Price: <?= $product['price'] ?> $</p>
+                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                            <input type="hidden" value="<?= $product['id'] ?>" name="id">
+                            <button class="btn btn-primary" type="submit">Add</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        <?php endforeach; ?>
+    </div>
+<?php else: ?>
     <div>No products in shop!</div><br>
 <?php endif; ?>
-
-<a href="cart.php">Go To Cart!</a><br>
-<a href="login.php">Login!</a>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
+        crossorigin="anonymous"></script>
 </body>
 </html>
 
