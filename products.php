@@ -2,7 +2,7 @@
 session_start();
 require 'common.php';
 $conn = conn();
-logout();
+logout($conn);
 //remove
 if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['remove'])) {
     removeProduct($conn, $_POST['id']);

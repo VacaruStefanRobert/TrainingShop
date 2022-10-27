@@ -2,7 +2,7 @@
 session_start();
 require_once 'common.php';
 $conn = conn();
-logout();
+logout($conn);
 $orders = selectOrders($conn);
 //verifying if u have privileges
 if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {

@@ -50,12 +50,12 @@ function updateProduct($conn, $product): void
     $stmt->execute();
 }
 
-function redirectAdmin(): void
+function addProduct($conn,$product): void
 {
-    //if admin redirect to his page of products
-    if (isset($_SESSION['admin']) and $_SESSION['admin']) {
-        header('Location: products.php');
-    }
+    $sql = "INSERT into products (title,description,price,image) VALUES (?,?,?,?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('ssds', $product['title'], $product['description'], $product['price'], $product['image']);
+    $stmt->execute();
 }
 
 function addOrder($conn, $info): void
@@ -76,7 +76,8 @@ function selectOrders($conn): array
     }
     return $orders;
 }
-function logout()
+
+function logout($conn): void
 {
     //Logout admin
     if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['logout'])) {
@@ -90,4 +91,10 @@ function logout()
     }
 }
 
-
+function redirectAdmin(): void
+{
+    //if admin redirect to his page of products
+    if (isset($_SESSION['admin']) and $_SESSION['admin']) {
+        header('Location: products.php');
+    }
+}
