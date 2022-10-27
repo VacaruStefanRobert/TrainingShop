@@ -44,9 +44,9 @@ function removeProduct($conn, $id): void
 
 function updateProduct($conn, $product): void
 {
-    $sql="UPDATE products SET title=?, description=?, price=?,image=? WHERE id=?";
-    $stmt=$conn->prepare($sql);
-    $stmt->bind_param('ssdsi',$product['title'],$product['description'],$product['price'],$product['image'],$product['id']);
+    $sql = "UPDATE products SET title=?, description=?, price=?,image=? WHERE id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('ssdsi', $product['title'], $product['description'], $product['price'], $product['image'], $product['id']);
     $stmt->execute();
 }
 
@@ -58,5 +58,36 @@ function redirectAdmin(): void
     }
 }
 
+function addOrder($conn, $info): void
+{
+    $sql = "INSERT into orders (name,date,email,comments,price,products) VALUES (?,?,?,?,?,?)";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param('ssssds', $info['name'], $info['date'], $info['email'], $info['comments'], $info['price'], $info['products']);
+    $stmt->execute();
+}
+
+function selectOrders($conn): array
+{
+    $sql = "SELECT * FROM orders";
+    $results = $conn->query($sql);
+    $orders = array();
+    while ($row = $results->fetch_assoc()) {
+        $orders[] = $row;
+    }
+    return $orders;
+}
+function logout()
+{
+    //Logout admin
+    if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['logout'])) {
+        unset($_SESSION['admin']);
+        unset($_POST['logout']);
+        header('Location: index.php');
+    } elseif (isset($_POST['remove'])) {
+        removeProduct($conn, $_POST['id']);
+    } elseif (isset($_POST['edit'])) {
+        header('Location: product.php?id=' . $_POST['id']);
+    }
+}
 
 

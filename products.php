@@ -2,16 +2,7 @@
 session_start();
 require 'common.php';
 $conn = conn();
-//Logout admin
-if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['logout'])) {
-    unset($_SESSION['admin']);
-    header('Location: index.php');
-} elseif (isset($_POST['remove'])) {
-    removeProduct($conn, $_POST['id']);
-} elseif (isset($_POST['edit'])) {
-    header('Location: product.php?id=' . $_POST['id']);
-}
-
+logout();
 //remove
 if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['remove'])) {
     removeProduct($conn, $_POST['id']);

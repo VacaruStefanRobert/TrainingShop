@@ -2,13 +2,14 @@
 session_start();
 require_once 'common.php';
 $conn = conn();
+logout();
 //verifying if u have privileges
 if (isset($_SESSION['admin']) and $_SESSION['admin']) {
     $product = selectById($conn, $_GET['id']);
-
 } else {
     header('Location: index.php');
 }
+
 //edit
 if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['edit'])) {
     $product = array(
@@ -22,7 +23,6 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['edit'])) {
     updateProduct($conn, $product);
     header('Location: products.php');
 }
-
 ?>
 <html lang="EN">
 <head>
