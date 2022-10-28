@@ -9,6 +9,7 @@ if (isset($_SESSION['admin']) and $_SESSION['admin'] and isset($_GET['id'])) {
     $product = selectById($conn, $_GET['id']);
 } elseif (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
     header('Location: index.php');
+    exit();
 }
 
 //edit
@@ -23,6 +24,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['edit'])) {
 
     updateProduct($conn, $product);
     header('Location: products.php');
+    exit();
 }
 //add
 if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['add'])) {
@@ -32,23 +34,14 @@ if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['add'])) {
         "price" => (float)$_POST['price'],
         "image" => $_POST['image']
     );
-
     addProduct($conn, $product);
     header('Location: products.php');
+    exit();
 }
 ?>
-<html lang="EN">
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Bootstrap demo</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-</head>
-<body>
-<?php require_once 'nav.php' ?>
+<?php require_once 'head.php';?>
 <div class="container px-4">
-    <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+    <form action="" method="POST">
         <input type="hidden" value="<?php if (isset($_GET['id'])): echo $_GET['id'];endif;?>" name="id">
         <div class="mb-3">
             <label for="exampleFormControlInput1" class="form-label">Title of Product</label>

@@ -6,6 +6,10 @@ logout($conn);
 //remove
 if ($_SERVER['REQUEST_METHOD'] == "POST" and isset($_POST['remove'])) {
     removeProduct($conn, $_POST['id']);
+    //If we delete a product we update the session of the cart in case the product is in cart
+    if (($key = array_search($_POST['id'], $_SESSION['cart'])) !== false) {
+        unset($_SESSION['cart'][$key]);
+    }
 }
 
 //verifying if u have privileges
@@ -13,6 +17,7 @@ if (isset($_SESSION['admin']) and $_SESSION['admin']) {
     $products = selectProducts($conn);
 } else {
     header('Location: index.php');
+    exit();
 }
 ?>
 <html lang="EN">
@@ -22,12 +27,11 @@ if (isset($_SESSION['admin']) and $_SESSION['admin']) {
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 </head>
 <body>
-<?php require_once 'nav.php'; ?>
+<?php require_once 'head.php';?>
 <?php if (!empty($products)): ?>
     <div class="row row-cols-1 row-cols-md-3 g-4">
 
-        <?php foreach ($products as $product):
-            ?>
+        <?php foreach ($products as $product):?>
             <div class="col">
                 <div class="card h-100">
                     <img src="images/<?= $product['image'] ?>" class="card-img-top img-fluid" alt="">
@@ -36,11 +40,11 @@ if (isset($_SESSION['admin']) and $_SESSION['admin']) {
                         <p class="card-text"><?= $product['description'] ?></p>
                         <p class="card-text">Price: <?= $product['price'] ?> $</p>
                         <div class="d-grid gap-2 d-md-block">
-                            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                            <form action="" method="POST">
                                 <input type="hidden" value="<?= $product['id'] ?>" name="id">
                                 <button class="btn btn-primary" type="submit" name="remove">Remove</button>
                             </form>
-                            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                            <form action="" method="POST">
                                 <input type="hidden" value="<?= $product['id'] ?>" name="id">
                                 <button class="btn btn-primary" type="submit" name="edit">Edit</button>
                             </form>

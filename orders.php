@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 require_once 'common.php';
 $conn = conn();
@@ -7,6 +8,7 @@ $orders = selectOrders($conn);
 //verifying if u have privileges
 if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
     header('Location: index.php');
+    exit();
 }
 ?>
 <html lang="EN">
@@ -17,10 +19,9 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
           integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
 </head>
 <body>
-<?php require_once 'nav.php' ?>
+<?php require_once 'head.php';?>
 <?php foreach ($orders as $order):
-    $productsId = json_decode($order['products']);
-    ?>
+    $productsId = json_decode($order['products']); ?>
     <div class="container-fluid">
 
         <div class="container">
@@ -40,7 +41,8 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
                                     <span class="me-3"><?= $order['date'] ?></span>
                                 </div>
                                 <div class="d-flex">
-                                    <a href="order.php?id=<?= $order['id'] ?>" type="button" class="btn btn-link p-0 me-3 d-none d-lg-block btn-icon-text">
+                                    <a href="order.php?id=<?= $order['id'] ?>" type="button"
+                                       class="btn btn-link p-0 me-3 d-none d-lg-block btn-icon-text">
                                         Go to Order</a>
                                     <div class="dropdown">
                                         <button class="btn btn-link p-0 text-muted" type="button"
@@ -56,11 +58,8 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
                                     </div>
                                 </div>
                             </div>
-                            <?php
-                            $totalPrice = 0;
-                            foreach ($productsId
-
-                            as $id):
+                            <?php $totalPrice = 0;
+                            foreach ($productsId as $id):
                             $product = selectById($conn, $id); ?>
                             <table class="table table-borderless">
                                 <tbody>
@@ -83,8 +82,7 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
                                     <td class="text-end">$ <?= $product['price'] ?></td>
                                 </tr>
                                 <?php $totalPrice = $totalPrice + $product['price'];
-                                endforeach;
-                                ?>
+                                endforeach;?>
                                 </tbody>
                                 <tfoot>
                                 <tr class="fw-bold">

@@ -1,4 +1,6 @@
-<?php if(isset($_SESSION['admin']) and $_SESSION['admin']):?>
+<?php
+
+if(isset($_SESSION['admin']) and $_SESSION['admin']):?>
     <nav class="navbar navbar-expand-lg bg-light">
         <div class="container-fluid">
 
@@ -10,18 +12,13 @@
                     <a class="nav-link active" aria-current="page" href="products.php">Products</a>
                     <a class="nav-link active" aria-current="page" href="orders.php">Orders</a>
                     <a class="nav-link active" aria-current="page" href="product.php">Add Product</a>
-                    <form id="logout1" action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
-                        <button onclick="logout()" class=" btn btn-outline-light nav-link active" aria-current="page" name="logout">Logout</button>
+                    <form id="logout1" action="" method="POST">
+                        <button type="submit" class=" btn btn-outline-light nav-link active" aria-current="page" name="logout">Logout</button>
                     </form>
                 </div>
             </div>
         </div>
     </nav>
-    <script>
-      function logout() {
-        document.getElementById("logout1").submit();
-      }
-    </script>
 <?php else:?>
 <nav class="navbar navbar-expand-lg bg-light">
     <div class="container-fluid">

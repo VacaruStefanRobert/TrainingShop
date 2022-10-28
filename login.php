@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 require_once 'common.php';
 redirectAdmin();
@@ -13,18 +14,11 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
     } else {
         $_SESSION['admin'] = true;
         header('Location: products.php');
+        exit();
     }
 }
 ?>
-<html lang="EN">
-<head>
-    <title>Login</title>
-
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-</head>
-<body>
-<?php require_once 'nav.php';?>
+<?php require_once 'head.php';?>
 <section class="vh-100">
     <div class="container py-5 h-100">
         <div class="row d-flex justify-content-center align-items-center h-100">
@@ -33,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD'] == "POST") {
                     <div class="card-body p-5 text-center">
 
                         <div class="mb-md-5 mt-md-4 pb-5">
-                            <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                            <form action="" method="POST">
                             <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
                             <p class="text-white-50 mb-5">Please enter your username and password!</p>
 

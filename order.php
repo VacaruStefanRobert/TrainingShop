@@ -1,4 +1,5 @@
 <?php
+
 session_start();
 require_once 'common.php';
 $conn = conn();
@@ -14,17 +15,10 @@ if (isset($_GET['id'])) {
 //verifying if u have privileges
 if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
     header('Location: index.php');
+    exit();
 }
 ?>
-<html lang="EN">
-<head>
-    <title>Orders</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-</head>
-<body>
-<?php require_once 'nav.php' ?>
+<?php require_once 'head.php';?>
 <div class="container-fluid">
     <div class="container">
         <!-- Title -->
@@ -57,11 +51,8 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
                                 </div>
                             </div>
                         </div>
-                        <?php
-                        $totalPrice = 0;
-                        foreach ($products
-
-                        as $product):
+                        <?php $totalPrice = 0;
+                        foreach ($products as $product):
                         ?>
                         <table class="table table-borderless">
                             <tbody>
@@ -84,8 +75,7 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
                                 <td class="text-end">$ <?= $product['price'] ?></td>
                             </tr>
                             <?php $totalPrice = $totalPrice + $product['price'];
-                            endforeach;
-                            ?>
+                            endforeach;?>
                             </tbody>
                             <tfoot>
                             <tr class="fw-bold">

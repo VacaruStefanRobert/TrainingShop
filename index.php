@@ -1,44 +1,33 @@
 <?php
+
 session_start();
 require_once 'common.php';
 $conn = conn();
 redirectAdmin();
 //added an item to the cart
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
+if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($POST['id'])) {
     $_SESSION['cart'][] = $_POST['id'];
-    header("Location: cart.php");
+    header('Location: cart.php');
+    exit();
 }
 //select the products
-if (!empty($conn)) {
-    $products = selectProducts($conn);
+$products = selectProducts($conn);
 
-    if (!empty($_SESSION['cart'])) {
-        $index = 0;
-        foreach ($products as $product) {
-            if (in_array((string)$product['id'], $_SESSION['cart'])) {
-                unset($products[$index]);
-            }
-            $index++;
+if (!empty($_SESSION['cart'])) {
+    $index = 0;
+    foreach ($products as $product) {
+        if (in_array((string)$product['id'], $_SESSION['cart'])) {
+            unset($products[$index]);
         }
-        $products = array_values($products);
+        $index++;
     }
+    $products = array_values($products);
 }
 ?>
-<html lang="EN">
-<head>
-    <title>Shop</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-
-</head>
-
-<body>
-<?php require_once 'nav.php'; ?>
-<?php
-if (!empty($products)):?>
+<?php require_once 'head.php';?>
+<?php if (!empty($products)): ?>
     <div class="row row-cols-1 row-cols-md-3 g-4">
-        <?php foreach ($products as $product):
-            ?>
+        <?php foreach ($products as $product): ?>
             <div class="col">
                 <div class="card h-100">
                     <img src="images/<?= $product['image'] ?>" class="card-img-top img-fluid" alt="">
@@ -46,7 +35,7 @@ if (!empty($products)):?>
                         <h5 class="card-title"><?= $product['title'] ?></h5>
                         <p class="card-text"><?= $product['description'] ?></p>
                         <p class="card-text">Price: <?= $product['price'] ?> $</p>
-                        <form action="<?php echo $_SERVER['PHP_SELF']; ?>" method="POST">
+                        <form action="" method="POST">
                             <input type="hidden" value="<?= $product['id'] ?>" name="id">
                             <button class="btn btn-primary" type="submit">Add</button>
                         </form>
