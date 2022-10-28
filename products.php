@@ -49,7 +49,6 @@ if (isset($_SESSION['admin']) and $_SESSION['admin']) {
                 </div>
             </div>
         <?php endforeach; ?>
-
     </div>
 <?php else: ?>
     <div>No products in shop!</div><br>

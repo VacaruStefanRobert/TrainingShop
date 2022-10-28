@@ -40,6 +40,8 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
                                     <span class="me-3"><?= $order['date'] ?></span>
                                 </div>
                                 <div class="d-flex">
+                                    <a href="order.php?id=<?= $order['id'] ?>" type="button" class="btn btn-link p-0 me-3 d-none d-lg-block btn-icon-text">
+                                        Go to Order</a>
                                     <div class="dropdown">
                                         <button class="btn btn-link p-0 text-muted" type="button"
                                                 data-bs-toggle="dropdown">

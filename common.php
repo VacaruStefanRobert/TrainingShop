@@ -50,7 +50,7 @@ function updateProduct($conn, $product): void
     $stmt->execute();
 }
 
-function addProduct($conn,$product): void
+function addProduct($conn, $product): void
 {
     $sql = "INSERT into products (title,description,price,image) VALUES (?,?,?,?)";
     $stmt = $conn->prepare($sql);
@@ -75,6 +75,16 @@ function selectOrders($conn): array
         $orders[] = $row;
     }
     return $orders;
+}
+function selectOrdersById($conn, $id):array
+{
+    $sql = "SELECT * FROM orders WHERE id=?";
+    $stmt = $conn->prepare($sql);
+    $stmt->bind_param("i", $id);
+    $stmt->execute();
+    $results = $stmt->get_result();
+
+    return $results->fetch_assoc();
 }
 
 function logout($conn): void
