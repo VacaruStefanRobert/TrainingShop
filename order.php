@@ -17,13 +17,12 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
     header('Location: index.php');
     exit();
 }
-?>
-<?php require_once 'head.php';?>
+require_once 'head.php'; ?>
 <div class="container-fluid">
     <div class="container">
         <!-- Title -->
         <div class="d-flex justify-content-between align-items-center py-3">
-            <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #<?= $order['id'] ?></h2>
+            <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> <?= translate('Order') ?> #<?= $order['id'] ?></h2>
         </div>
 
         <!-- Main content -->
@@ -52,7 +51,9 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
                             </div>
                         </div>
                         <?php $totalPrice = 0;
-                        foreach ($products as $product):
+                        foreach ($products
+
+                        as $product):
                         ?>
                         <table class="table table-borderless">
                             <tbody>
@@ -67,7 +68,7 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
                                             <h6 class="small mb-0"><a href="#"
                                                                       class="text-reset"><?= $product['title'] ?></a>
                                             </h6>
-                                            <span class="small">Description: <?= $product['description'] ?></span>
+                                            <span class="small"><?= translate('Description') ?>: <?= $product['description'] ?></span>
                                         </div>
                                     </div>
                                 </td>
@@ -75,7 +76,7 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
                                 <td class="text-end">$ <?= $product['price'] ?></td>
                             </tr>
                             <?php $totalPrice = $totalPrice + $product['price'];
-                            endforeach;?>
+                            endforeach; ?>
                             </tbody>
                             <tfoot>
                             <tr class="fw-bold">
@@ -91,14 +92,14 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
                     <div class="card-body">
                         <div class="row">
                             <div class="col-lg-6">
-                                <h3 class="h6">Payment</h3>
+                                <h3 class="h6"><?= translate('Payment') ?></h3>
                                 <p>Total: $ <?= $totalPrice ?> </p>
                             </div>
                             <div class="col-lg-6">
-                                <h3 class="h6">Comments and details</h3>
+                                <h3 class="h6"><?= translate('Comments and details') ?></h3>
                                 <address>
-                                    <strong>Name: <?= $order['name'] ?></strong><br>
-                                    Comments: <?= $order['comments'] ?>
+                                    <strong><?= translate('Name') ?>: <?= $order['name'] ?></strong><br>
+                                    <?= translate('Comments and details') ?>: <?= $order['comments'] ?>
                                 </address>
                             </div>
                         </div>

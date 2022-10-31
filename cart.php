@@ -3,7 +3,6 @@
 session_start();
 require_once 'common.php';
 $conn = conn();
-redirectAdmin();
 //remove item
 if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST['remove'])) {
     $_SESSION['cart'] = array_diff($_SESSION['cart'], array($_POST['id']));
@@ -47,12 +46,12 @@ if ($_SERVER['REQUEST_METHOD'] = 'POST' and isset($_POST['checkout'])) :
             <li>Product Pirce: " . $product['price'] . "$</li>
             </ul>";
     }
-    $mailBody .= "</html>";
+    $mailBody .= '</html>';
     // HEADER - HTML MAIL
     $mailHead = implode("\r\n", [
         "MIME-Version: 1.0",
         "Content-type: text/html; charset=utf-8",
-        'From: trainingShop@example.com'
+        "From: trainingShop@example.com"
     ]);
 
 //  SEND
@@ -66,8 +65,8 @@ if ($_SERVER['REQUEST_METHOD'] = 'POST' and isset($_POST['checkout'])) :
     endif;
 
 else:
-     require_once 'head.php';
-     if (!empty($products)):
+    require_once 'head.php';
+    if (!empty($products)):
         $price = 0;
         ?>
         <div class="row row-cols-1 row-cols-md-3 g-4">
@@ -79,10 +78,11 @@ else:
                         <div class="card-body">
                             <h5 class="card-title"><?= $product['title'] ?></h5>
                             <p class="card-text"><?= $product['description'] ?></p>
-                            <p class="card-text">Price: <?= $product['price'] ?> $</p>
+                            <p class="card-text"><?= translate('Price') ?>: <?= $product['price'] ?> $</p>
                             <form action="" method="POST">
                                 <input type="hidden" value="<?= $product['id'] ?>" name="id">
-                                <button class="btn btn-primary" type="submit" name="remove">Remove</button>
+                                <button class="btn btn-primary" type="submit"
+                                        name="remove"><?= translate('Remove') ?></button>
                             </form>
                         </div>
                     </div>
@@ -94,33 +94,30 @@ else:
         <div class="container-fluid">
             <form action="" method="POST">
                 <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Name</label>
+                    <label for="exampleFormControlInput1" class="form-label"><?= translate('Name') ?></label>
                     <input type="text" class="form-control" id="exampleFormControlInput1" placeholder="ex: John Doe"
                            name="name">
                 </div>
                 <div class="mb-3">
-                    <label for="exampleFormControlInput1" class="form-label">Email</label>
+                    <label for="exampleFormControlInput1" class="form-label"><?= translate('Email') ?></label>
                     <input type="email" class="form-control" id="exampleFormControlInput1"
                            placeholder="ex: example@example.com" name="email">
                 </div>
                 <div class="mb-3">
-                    <label for="exampleFormControlTextarea1" class="form-label">Comments and details</label>
+                    <label for="exampleFormControlTextarea1"
+                           class="form-label"><?= translate('Comments and details') ?></label>
                     <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" name="comments"></textarea>
                 </div>
                 <div class="mb-3">
-                    <div>Price: <?= $price ?> $</div>
+                    <div><?= translate('Price') ?>: <?= $price ?> $</div>
                     <input type="hidden" value="<?= $price ?>" name="price">
                 </div>
-                <button class="btn btn-primary" type="submit" name="checkout">Checkout</button>
+                <button class="btn btn-primary" type="submit" name="checkout"><?= translate('Checkout') ?></button>
             </form>
         </div>
     <?php else: ?>
-        <div>No products in cart!</div><br>
+        <div><?= translate('No products in cart!') ?></div><br>
     <?php endif; ?>
-
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
-            integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
-            crossorigin="anonymous"></script>
     </body>
     </html>
 <?php endif;

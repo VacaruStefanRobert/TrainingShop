@@ -10,24 +10,16 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
     header('Location: index.php');
     exit();
 }
-?>
-<html lang="EN">
-<head>
-    <title>Orders</title>
-    <link rel="stylesheet" href="style.css">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet"
-          integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous">
-</head>
-<body>
-<?php require_once 'head.php';?>
-<?php foreach ($orders as $order):
+require_once 'head.php';
+foreach ($orders as $order):
     $productsId = json_decode($order['products']); ?>
     <div class="container-fluid">
 
         <div class="container">
             <!-- Title -->
             <div class="d-flex justify-content-between align-items-center py-3">
-                <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> Order #<?= $order['id'] ?></h2>
+                <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> <?= translate('Order') ?> #<?= $order['id'] ?>
+                </h2>
             </div>
 
             <!-- Main content -->
@@ -43,7 +35,7 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
                                 <div class="d-flex">
                                     <a href="order.php?id=<?= $order['id'] ?>" type="button"
                                        class="btn btn-link p-0 me-3 d-none d-lg-block btn-icon-text">
-                                        Go to Order</a>
+                                        <?= translate('Go to Order') ?></a>
                                     <div class="dropdown">
                                         <button class="btn btn-link p-0 text-muted" type="button"
                                                 data-bs-toggle="dropdown">
@@ -59,7 +51,9 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
                                 </div>
                             </div>
                             <?php $totalPrice = 0;
-                            foreach ($productsId as $id):
+                            foreach ($productsId
+
+                            as $id):
                             $product = selectById($conn, $id); ?>
                             <table class="table table-borderless">
                                 <tbody>
@@ -74,7 +68,7 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
                                                 <h6 class="small mb-0"><a href="#"
                                                                           class="text-reset"><?= $product['title'] ?></a>
                                                 </h6>
-                                                <span class="small">Description: <?= $product['description'] ?></span>
+                                                <span class="small"><?= translate('Description') ?>: <?= $product['description'] ?></span>
                                             </div>
                                         </div>
                                     </td>
@@ -82,7 +76,8 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
                                     <td class="text-end">$ <?= $product['price'] ?></td>
                                 </tr>
                                 <?php $totalPrice = $totalPrice + $product['price'];
-                                endforeach;?>
+                                endforeach;
+                                ?>
                                 </tbody>
                                 <tfoot>
                                 <tr class="fw-bold">
@@ -98,14 +93,14 @@ if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-lg-6">
-                                    <h3 class="h6">Payment</h3>
+                                    <h3 class="h6"><?= translate('Payment') ?></h3>
                                     <p>Total: $ <?= $totalPrice ?> </p>
                                 </div>
                                 <div class="col-lg-6">
-                                    <h3 class="h6">Comments and details</h3>
+                                    <h3 class="h6"><?= translate('Comments and details') ?></h3>
                                     <address>
-                                        <strong>Name: <?= $order['name'] ?></strong><br>
-                                        Comments: <?= $order['comments'] ?>
+                                        <strong><?= translate('Name') ?>: <?= $order['name'] ?></strong><br>
+                                        <?= translate('Comments and details') ?>: <?= $order['comments'] ?>
                                     </address>
                                 </div>
                             </div>

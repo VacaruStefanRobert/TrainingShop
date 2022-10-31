@@ -1,6 +1,7 @@
 <?php
 
 require_once 'config.php';
+require_once 'languages.php';
 function conn(): ?PDO
 {
     try {
@@ -99,6 +100,23 @@ function selectOrdersById($conn, $id): array
     return $stmt->fetch();
 }
 
+function selectNotInCart($conn, $cart): array
+{
+    $sql = 'SELECT * FROM products WHERE ';
+    $len = count($cart);
+    $index = 0;
+    foreach ($cart as $id) {
+        if ($index != $len - 1) {
+            $sql .= 'id!=' . $id . ' AND ';
+        } else {
+            $sql .= 'id!=' . $id;
+        }
+        $index += 1;
+    }
+    $stmt = $conn->query($sql);
+    return $stmt->fetchAll();
+}
+
 function logout($conn): void
 {
     //Logout admin
@@ -114,11 +132,18 @@ function logout($conn): void
     }
 }
 
-function redirectAdmin(): void
+function translate($word)
 {
-    //if admin redirect to his page of products
-    if (isset($_SESSION['admin']) and $_SESSION['admin']) {
-        header('Location: products.php');
-        exit();
+    $lang = array();
+    if (isset($_SERVER['HTTP_ACCEPT_LANGUAGE'])) {
+        // break up string into pieces (languages and q factors)
+        preg_match_all('/([a-z]{1,8}(-[a-z]{1,8})?)\s*(;\s*q\s*=\s*(1|0\.[0-9]+))?/i', $_SERVER['HTTP_ACCEPT_LANGUAGE'], $lang);
+
+        if ($lang[1][1] == 'en') {
+            if (isset($GLOBALS['ro'][$word])) {
+                return $GLOBALS['ro'][$word];
+            }
+        }
     }
+    return $word;
 }
