@@ -15,7 +15,7 @@ if (isset($_SESSION['admin']) and $_SESSION['admin']):?>
                     <a class="nav-link active" aria-current="page" href="orders.php"><?= translate('Orders') ?></a>
                     <a class="nav-link active" aria-current="page"
                        href="product.php"><?= translate('Add Product') ?></a>
-                    <form id="logout1" action="" method="POST">
+                    <form  action="login.php" method="POST">
                         <button type="submit" class=" btn btn-outline-light nav-link active" aria-current="page"
                                 name="logout"><?= translate('Logout') ?>
                         </button>

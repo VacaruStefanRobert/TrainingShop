@@ -1,29 +1,28 @@
 <?php
 
-session_start();
 require 'common.php';
+
 $conn = conn();
-logout($conn);
+checkPrivileges();
+$products = selectProducts($conn);
 //remove
-if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST['remove'])) {
-    removeProduct($conn, $_POST['id']);
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['remove'])) {
+    $sql = 'DELETE FROM products WHERE id=?';
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$_POST['id']]);
+    //NEED TO DELETE THE FILE ALSO FROM SERVER
+    deleteImageFromStorage(array_column($products, null, 'id')[$_POST['id']]['image'] ?? false);
     //If we delete a product we update the session of the cart in case the product is in cart
-    if (($key = array_search($_POST['id'], $_SESSION['cart'])) !== false) {
+    if (isset($_SESSION['cart']) && ($key = array_search($_POST['id'], $_SESSION['cart'])) !== false) {
         unset($_SESSION['cart'][$key]);
     }
+    header('Location: products.php');
+    exit;
 }
 
-//verifying if u have privileges
-if (isset($_SESSION['admin']) and $_SESSION['admin']) {
-    $products = selectProducts($conn);
-} else {
-    header('Location: index.php');
-    exit();
-}
 require_once 'head.php';
 if (!empty($products)): ?>
     <div class="row row-cols-1 row-cols-md-3 g-4">
-
         <?php foreach ($products as $product): ?>
             <div class="col">
                 <div class="card h-100">
@@ -38,11 +37,8 @@ if (!empty($products)): ?>
                                 <button class="btn btn-primary" type="submit"
                                         name="remove"><?= translate('Remove') ?></button>
                             </form>
-                            <form action="" method="POST">
-                                <input type="hidden" value="<?= $product['id'] ?>" name="id">
-                                <button class="btn btn-primary" type="submit"
-                                        name="edit"><?= translate('Edit') ?></button>
-                            </form>
+                            <a class="btn btn-primary"
+                               href="product.php?id=<?= $product['id'] ?>"><?= translate('Edit') ?></a>
                         </div>
                     </div>
                 </div>
@@ -50,7 +46,7 @@ if (!empty($products)): ?>
         <?php endforeach; ?>
     </div>
 <?php else: ?>
-    <div>No products in shop!</div><br>
+    <div><?= translate('No products in shop!') ?></div><br>
 <?php endif; ?>
 </body>
 </html>

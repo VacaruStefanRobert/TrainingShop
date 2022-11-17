@@ -27,5 +27,6 @@ $GLOBALS['ro'] = array(
     'Go to Order' => 'Mergi la comanda',
     'Title of Product' => 'Titlul Produsului',
     'Description' => 'Descriere',
-    'Input your image' => 'Selecteaza imaginea'
+    'Input your image' => 'Selecteaza imaginea',
+    'Shop' => 'Magazin'
 );

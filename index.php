@@ -1,20 +1,22 @@
 <?php
 
-session_start();
 require_once 'common.php';
-$conn = conn();
 
+$conn = conn();
 //added an item to the cart
-if ($_SERVER['REQUEST_METHOD'] == 'POST' and isset($_POST['id'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST' && isset($_POST['id'])) {
     $_SESSION['cart'][] = $_POST['id'];
     header('Location: cart.php');
-    exit();
+    exit;
 }
 //select the products
 if (!empty($_SESSION['cart'])) {
-    $products = selectNotInCart($conn, $_SESSION['cart']);
+    $placeHolders = implode(', ', array_fill(0, count($_SESSION['cart']), '?'));
+    $stmt = $conn->prepare("SELECT * FROM products WHERE id NOT IN ($placeHolders)");
+    $stmt->execute($_SESSION['cart']);
+    $products = $stmt->fetchAll();
 } else {
-    $products = selectProducts($conn);
+    $products=selectProducts($conn);
 }
 require_once 'head.php';
 if (!empty($products)): ?>
@@ -27,7 +29,7 @@ if (!empty($products)): ?>
                         <h5 class="card-title"><?= $product['title'] ?></h5>
                         <p class="card-text"><?= $product['description'] ?></p>
                         <p class="card-text"><?= translate('Price') ?>: <?= $product['price'] ?> $</p>
-                        <form action="" method="POST">
+                        <form method="POST">
                             <input type="hidden" value="<?= $product['id'] ?>" name="id">
                             <button class="btn btn-primary" type="submit"><?= translate('Add') ?></button>
                         </form>

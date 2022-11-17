@@ -1,23 +1,28 @@
 <?php
 
-session_start();
 require_once 'common.php';
+
+$conn = conn();
+//logout admin
+if ($_SERVER['REQUEST_METHOD'] === 'POST' and isset($_POST['logout'])) {
+    unset($_SESSION['admin']);
+    header('Location: index.php');
+    exit;
+}
 //login admin
-if ($_SERVER['REQUEST_METHOD'] == "POST") {
-    if (!empty($_POST['name']) and !empty($_POST['password'])) {
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    if (!empty($_POST['name']) && !empty($_POST['password'])) {
         $name = strip_tags($_POST['name']);
         $password = strip_tags($_POST['password']);
-        if ($name != ADMINNAME) {
-            echo '<script>alert("Incorrect username");</script>';
-        } elseif ($password != ADMINPASS) {
-            echo '<script>alert("Incorrect password");</script>';
+        if ($name !== ADMINNAME || $password !== ADMINPASS) {
+            $error = 'Wrong Credentials!';
         } else {
             $_SESSION['admin'] = true;
             header('Location: products.php');
-            exit();
+            exit;
         }
     } else {
-        echo '<script>alert("Some fields are empty!");</script>';
+        $error = 'Some fields are empty!';
     }
 }
 require_once 'head.php'; ?>
@@ -29,10 +34,10 @@ require_once 'head.php'; ?>
                     <div class="card-body p-5 text-center">
 
                         <div class="mb-md-5 mt-md-4 pb-5">
-                            <form action="" method="POST">
+                            <form method="POST">
                                 <h2 class="fw-bold mb-2 text-uppercase"><?= translate('Login') ?></h2>
                                 <p class="text-white-50 mb-5"><?= translate('Please enter your username and password!') ?></p>
-
+                                <p class="text-50 mb-5" style="color: red"><?= $error ?? '' ?></p>
                                 <div class="form-outline form-white mb-4">
                                     <label class="form-label" for="typeNameX"><?= translate('Username') ?></label>
                                     <input type="text" id="typeNameX" class="form-control form-control-lg" name="name"/>

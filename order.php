@@ -1,22 +1,25 @@
 <?php
 
-session_start();
 require_once 'common.php';
+
 $conn = conn();
-logout($conn);
-if (isset($_GET['id'])) {
-    $order = selectOrdersById($conn, $_GET['id']);
-    $productsId = json_decode($order['products']);
-    $products = array();
-    foreach ($productsId as $id) {
-        $products[] = selectById($conn, $id);
-    }
-}
 //verifying if u have privileges
-if (!(isset($_SESSION['admin']) and $_SESSION['admin'])) {
-    header('Location: index.php');
-    exit();
+checkPrivileges();
+//Join tables and get products from specific order
+if (isset($_GET['id'])) {
+    $sql = 'SELECT * FROM orders WHERE id=?';
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$_GET['id']]);
+    $order = $stmt->fetch();
+    $sql = 'SELECT * FROM products INNER JOIN order_products ON  products.id=order_products.product_id WHERE order_products.order_id=?';
+    $stmt = $conn->prepare($sql);
+    $stmt->execute([$order['id']]);
+    $products = $stmt->fetchAll();
+}else{
+    header('Location: products.php');
+    exit;
 }
+
 require_once 'head.php'; ?>
 <div class="container-fluid">
     <div class="container">
@@ -24,7 +27,6 @@ require_once 'head.php'; ?>
         <div class="d-flex justify-content-between align-items-center py-3">
             <h2 class="h5 mb-0"><a href="#" class="text-muted"></a> <?= translate('Order') ?> #<?= $order['id'] ?></h2>
         </div>
-
         <!-- Main content -->
         <div class="row">
             <div class="col-lg-8">
@@ -42,19 +44,18 @@ require_once 'head.php'; ?>
                                         <i class="bi bi-three-dots-vertical"></i>
                                     </button>
                                     <ul class="dropdown-menu dropdown-menu-end">
-                                        <li><a class="dropdown-item" href="#"><i class="bi bi-pencil"></i> Edit</a>
+                                        <li><a class="dropdown-item" href="#"><i
+                                                        class="bi bi-pencil"></i> <?= translate('Edit') ?>></a>
                                         </li>
                                         <li><a class="dropdown-item" href="#"><i class="bi bi-printer"></i>
-                                                Print</a></li>
+                                                <?= translate('Print') ?>></a></li>
                                     </ul>
                                 </div>
                             </div>
                         </div>
-                        <?php $totalPrice = 0;
-                        foreach ($products
+                        <?php foreach ($products
 
-                        as $product):
-                        ?>
+                        as $product): ?>
                         <table class="table table-borderless">
                             <tbody>
                             <tr>
@@ -75,13 +76,12 @@ require_once 'head.php'; ?>
                                 <td></td>
                                 <td class="text-end">$ <?= $product['price'] ?></td>
                             </tr>
-                            <?php $totalPrice = $totalPrice + $product['price'];
-                            endforeach; ?>
+                            <?php endforeach; ?>
                             </tbody>
                             <tfoot>
                             <tr class="fw-bold">
                                 <td colspan="2">TOTAL</td>
-                                <td class="text-end">$ <?= $totalPrice ?></td>
+                                <td class="text-end">$ <?= $order['price'] ?></td>
                             </tr>
                             </tfoot>
                         </table>
@@ -93,7 +93,7 @@ require_once 'head.php'; ?>
                         <div class="row">
                             <div class="col-lg-6">
                                 <h3 class="h6"><?= translate('Payment') ?></h3>
-                                <p>Total: $ <?= $totalPrice ?> </p>
+                                <p>Total: $ <?= $order['price'] ?> </p>
                             </div>
                             <div class="col-lg-6">
                                 <h3 class="h6"><?= translate('Comments and details') ?></h3>
